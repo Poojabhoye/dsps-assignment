@@ -1,0 +1,70 @@
+#include<iostream>
+using namespace std;
+
+int f = 0;
+
+class student
+{
+    public:
+    int rno;
+    string name, branch, T_name;
+
+    void accept()
+    {
+        cout<<"Enter the Student rollno=:";
+        cin>>rno;
+        cout<<"\nEnter the name of student=:";
+        cin>>name;
+        cout<<"\nEnter the branch of Student=:";
+        cin>>branch;
+        cout<<"\nEnter the Training name=:";
+        cin>>T_name;
+    }
+
+    void display()
+    {
+        cout<<"\nRoll no=:"<<rno;
+        cout<<"\nName of Student=:"<<name;
+        cout<<"\nBranch=:"<<branch;
+        cout<<"\nTraining name=:"<<T_name;
+    }
+
+    void Lsearch(int r)
+    {
+        if(rno == r)
+        {
+            f = 1;
+            cout<<"\nRoll no=:"<<rno;
+            cout<<"\nName of student=:"<<name;
+            cout<<"\nBranch=:"<<branch;
+            cout<<"\nTraining name=:"<<T_name;
+        }
+    }
+};
+
+int main()
+{
+    int n, r;
+    student s[20]; // corrected class name
+    cout<<"Enter the Number of Students=:";
+    cin>>n;
+
+    for(int i = 0; i < n; i++)
+        s[i].accept();
+
+    for(int i = 0; i < n; i++)
+        s[i].display();
+
+    cout<<"\nEnter the rollno of student to search=:";
+    cin>>r;
+
+    for(int i = 0; i < n; i++)
+        s[i].Lsearch(r);
+
+    if(f == 0)
+    {
+        cout<<"\nStudent is absent for training program";
+    }
+    
+    return 0;
+}

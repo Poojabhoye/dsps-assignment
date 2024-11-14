@@ -1,0 +1,88 @@
+#include<iostream>
+using namespace std;
+
+class LMS {
+    string tt, aut, pub;
+    int price;
+    LMS *next;
+   
+public:
+    void accept();
+    void display();
+};
+
+LMS *start = NULL;
+void LMS::accept() {
+    LMS *newnode, *temp;
+    newnode = new LMS;
+   
+   
+    cout << "Enter the book title: ";
+    cin >> newnode->tt;
+    cout << "Enter the author: ";
+    cin >> newnode->aut;
+    cout << "Enter the publisher: ";
+    cin >> newnode->pub;
+    cout << "Enter the price: ";
+    cin >> newnode->price;
+   
+    newnode->next = NULL;
+   
+    if (start == NULL) {
+        start = newnode;
+    } else {
+        temp = start;
+       
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newnode;
+    }
+}
+
+void LMS::display() {
+    LMS *temp;
+    temp = start;
+   
+    if (temp == NULL) {
+        cout << "No books available in the list." << endl;
+        return;
+    }
+
+   
+    while (temp != NULL) {
+        cout << "\nTitle: " << temp->tt << "\tAuthor: " << temp->aut << "\tPublisher: " << temp->pub << "\tPrice: " << temp->price;
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    LMS a;
+    int ch;
+   
+    do {
+        cout << "\nMenu:\n";
+        cout << "1. Accept book details\n";
+        cout << "2. Display book details\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> ch;
+       
+        switch (ch) {
+            case 1:
+                a.accept();
+                break;
+            case 2:
+                a.display();
+                break;
+            case 0:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice, try again!" << endl;
+        }
+    } while (ch != 0);
+   
+    return 0;
+}

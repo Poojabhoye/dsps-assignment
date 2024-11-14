@@ -1,0 +1,187 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class MLS
+{
+    int trackno;
+    string name, artist;
+    float duration;
+    MLS *prev, *next;
+
+public:
+    MLS() : prev(nullptr), next(nullptr) {}
+
+    void accept();
+    void display();
+    void dispcount();
+    void search();
+    void update();
+    void remove();
+
+    static MLS *start;
+    static MLS *end;
+};
+
+// Initialize static members
+MLS *MLS::start = nullptr;
+MLS *MLS::end = nullptr;
+
+void MLS::accept()
+{
+    MLS *nnode = new MLS;
+    cout << "Enter the track number, song name, artist, and duration: ";
+    cin >> nnode->trackno >> nnode->name >> nnode->artist >> nnode->duration;
+
+    nnode->next = nnode->prev = nullptr;
+
+    if (start == nullptr)
+    {
+        start = nnode;
+        end = nnode;
+    }
+    else
+    {
+        end->next = nnode;
+        nnode->prev = end;
+        end = nnode;
+    }
+}
+
+void MLS::display()
+{
+    if (start == nullptr)
+    {
+        cout << "No tracks in the playlist." << endl;
+        return;
+    }
+
+    MLS *temp = start;
+    while (temp != nullptr)
+    {
+        cout << "Track Number: " << temp->trackno
+             << ", Name: " << temp->name
+             << ", Artist: " << temp->artist
+             << ", Duration: " << temp->duration << " mins" << endl;
+        temp = temp->next;
+    }
+}
+
+void MLS::dispcount()
+{
+    int count = 0;
+    MLS *temp = start;
+    while (temp != nullptr)
+    {
+        count++;
+        temp = temp->next;
+    }
+    cout << "Total tracks: " << count << endl;
+}
+
+void MLS::search()
+{
+    int trackNo;
+    cout << "Enter track number to search: ";
+    cin >> trackNo;
+    MLS *temp = start;
+    while (temp != NULL)
+    {
+        if (temp->trackno == trackNo)
+        {
+            cout << "Track found: " << temp->name << " by " << temp->artist << endl;
+            return;
+        }
+        temp = temp->next;
+    }
+    cout << "Track not found." << endl;
+}
+
+void MLS::update()
+{
+    int trackNo;
+    cout << "Enter track number to update: ";
+    cin >> trackNo;
+    MLS *temp = start;
+    while (temp != nullptr)
+    {
+        if (temp->trackno == trackNo)
+        {
+            cout << "Enter new details (name, artist, duration): ";
+            cin >> temp->name >> temp->artist >> temp->duration;
+            cout << "Track updated successfully." << endl;
+            return;
+        }
+        temp = temp->next;
+    }
+    cout << "Track not found." << endl;
+}
+
+void MLS::remove()
+{
+    int trackNo;
+    cout << "Enter track number to remove: ";
+    cin >> trackNo;
+    MLS *temp = start;
+    while (temp != nullptr)
+    {
+        if (temp->trackno == trackNo)
+        {
+            if (temp == start)
+                start = temp->next;
+            if (temp == end)
+                end = temp->prev;
+            if (temp->prev != nullptr)
+                temp->prev->next = temp->next;
+            if (temp->next != nullptr)
+                temp->next->prev = temp->prev;
+
+            delete temp;
+            cout << "Track removed successfully." << endl;
+            return;
+        }
+        temp = temp->next;
+    }
+    cout << "Track not found." << endl;
+}
+
+int main()
+{
+    MLS playlist;
+    int choice;
+
+    while (true)
+    {
+        cout << "\n1. Add Track\n2. Display All Tracks\n3. Display Track Count\n4. Search Track\n5. Update Track\n6. Remove Track\n7. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            playlist.accept();
+            break;
+        case 2:
+            playlist.display();
+            break;
+        case 3:
+            playlist.dispcount();
+            break;
+        case 4:
+            playlist.search();
+            break;
+        case 5:
+            playlist.update();
+            break;
+        case 6:
+            playlist.remove();
+            break;
+        case 7:
+            exit(0);
+        default:
+            cout << "Invalid choice. Try again." << endl;
+        }
+    }
+
+    return 0;
+}

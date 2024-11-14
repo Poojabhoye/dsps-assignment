@@ -1,0 +1,191 @@
+#include <iostream>
+#include <string>
+using namespace std;
+class Donar
+{
+string name, add;
+int amt, cn;
+Donar* next;
+public:
+static int count;
+Donar() : next(NULL)
+{}
+void accept();
+void display();
+void search();
+void update();
+void remove();
+static void donarcount();
+} *start = NULL;
+
+int Donar::count = 0;
+void Donar::accept()
+{
+Donar* newnode = new Donar();
+cout << "Enter the donar name and address: ";
+cin >> newnode->name >> newnode->add;
+cout << "Enter the donation amount: ";
+cin >> newnode->amt;
+cout << "Enter the contact number: ";
+cin >> newnode->cn;
+newnode->next = NULL;
+if (start == NULL)
+{
+start = newnode;
+} else {
+Donar* temp = start;
+while (temp->next != NULL)
+ {
+temp = temp->next;
+}
+temp->next = newnode;
+}
+count++;
+}
+void Donar::display()
+{
+if (start == NULL)
+{
+cout << "No donors available.\n";
+return;
+}
+Donar* temp = start;
+while (temp != NULL) {
+cout << "\nName: " << temp->name
+<< "\nAddress: " << temp->add
+<< "\nAmount: " << temp->amt
+<< "\nContact Number: " << temp->cn << "\n";
+temp = temp->next;
+}
+}
+void Donar::search()
+{
+string nn;
+cout << "Enter the name to search: ";
+cin >> nn;
+Donar* temp = start;
+bool found = false;
+while (temp != NULL)
+ {
+if (temp->name == nn)
+{
+cout << "\nDonor Found!\n";
+cout << "Name: " << temp->name
+<< "\nAddress: " << temp->add
+<< "\nAmount: " << temp->amt
+<< "\nContact Number: " << temp->cn << "\n";
+found = true;
+break;
+}
+temp = temp->next;
+    }
+if (!found) {
+cout << "Donor not found.\n";
+    }
+}
+void Donar::update()
+{
+string nn;
+cout << "Enter the name to update: ";
+cin >> nn;
+Donar* temp = start;
+bool found = false;
+while (temp != NULL)
+{
+if (temp->name == nn)
+{
+cout << "\nUpdating donor information.\n";
+cout << "Enter new address: ";
+cin >> temp->add;
+cout << "Enter new amount: ";
+cin >> temp->amt;
+cout << "Enter new contact number: ";
+cin >> temp->cn;
+found = true;
+break;
+        }
+temp = temp->next;
+    }
+if (!found) {
+cout << "Donor not found.\n";
+    }
+}
+void Donar::remove() {
+string nn;
+cout << "Enter the name to remove: ";
+cin >> nn;
+Donar *temp = start, *prev = NULL;
+bool found = false;
+while (temp != NULL)
+{
+if (temp->name == nn)
+{
+if (prev == NULL)
+{
+start = temp->next;
+} else {
+prev->next = temp->next;
+}
+delete temp;
+cout << "Donor removed successfully.\n";
+found = true;
+count--;
+break;          
+        }
+prev = temp;
+temp = temp->next;
+    }
+if (!found) {
+cout << "Donor not found.\n";
+    }
+}
+
+void Donar::donarcount() {
+cout << "Total number of donors: " << count << endl;
+}
+
+int main() {
+Donar a;
+int ch;
+   
+do {
+cout << "\nMenu:\n";
+        cout << "1. Accept donar details\n";
+        cout << "2. Display donar details\n";
+        cout << "3. Search donar details\n";
+        cout << "4. Update donar details\n";
+        cout << "5. Remove donar details\n";
+        cout << "6. Display total donors\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> ch;
+       
+        switch (ch) {
+            case 1:
+                a.accept();
+                break;
+            case 2:
+                a.display();
+                break;
+            case 3:
+                a.search();
+                break;
+            case 4:
+                a.update();
+                break;
+            case 5:
+                a.remove();
+                break;
+            case 6:
+                Donar::donarcount();
+                break;
+            case 0:
+                cout << "Exiting..." << endl;
+                break;
+            default:
+                cout << "Invalid choice, try again!" << endl;
+        }
+    } while (ch != 0);
+   
+    return 0;
+}

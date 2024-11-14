@@ -1,0 +1,213 @@
+#include<iostream>
+using namespace std;
+const int MAX = 5;
+
+class PizzaParlour
+{
+    int front, rear;
+    int orders[MAX];
+    bool firstOrderDiscountApplied;
+
+public:
+    PizzaParlour()
+    {
+        front = rear = -1;
+        firstOrderDiscountApplied = false;
+    }
+   
+    bool addOrder(int data);
+    void serveOrder();
+    void display();
+    bool cancelOrder(int id);
+};
+
+bool PizzaParlour::addOrder(int id)
+{
+    if (rear == -1)
+    {
+        // First order
+        front = rear = 0;
+        orders[rear] = id;
+        return true;
+    }
+    else
+    {
+        // Circular queue condition check
+        int pos = (rear + 1) % MAX;
+        if (pos == front)
+        {
+            cout << "\nCafe is Full. Please wait.\n";
+            return false;
+        }
+        else
+        {
+            rear = pos;
+            orders[rear] = id;
+            return true;
+        }
+    }
+}
+
+void PizzaParlour::serveOrder()
+{
+    if (front == -1)
+    {
+        cout << "\nNo Orders in Cafe. [Cafe is Empty]\n";
+        return;
+    }
+    else
+    {
+        cout << "\nOrder No. " << orders[front] << " is processed.\n";
+        if (!firstOrderDiscountApplied)
+        {
+            cout << "Discount applied on this order!\n";
+            firstOrderDiscountApplied = true;
+        }
+
+        if (front == rear)
+        {
+            // If only one order is left
+            front = rear = -1;
+        }
+        else
+        {
+            // Move front in circular queue
+            front = (front + 1) % MAX;
+        }
+    }
+}
+
+bool PizzaParlour::cancelOrder(int id)
+{
+    if (front == -1)
+    {
+        cout << "\nNo Orders to cancel. [Cafe is Empty]\n";
+        return false;
+    }
+
+    int i = front;
+    bool found = false;
+   
+    while (true)
+    {
+        if (orders[i] == id)
+        {
+            found = true;
+            break;
+        }
+        if (i == rear)
+        {
+            break;
+        }
+        i = (i + 1) % MAX;
+    }
+
+    if (!found)
+    {
+        cout << "\nOrder ID not found.\n";
+        return false;
+    }
+
+    cout << "\nOrder No. " << id << " is canceled. Refund initiated.\n";
+
+    // Shift orders to maintain queue structure
+    while (i != rear)
+    {
+        orders[i] = orders[(i + 1) % MAX];
+        i = (i + 1) % MAX;
+    }
+   
+    if (front == rear)
+    {
+        // If only one order was left
+        front = rear = -1;
+    }
+    else
+    {
+        // Decrement rear in circular queue
+        rear = (rear - 1 + MAX) % MAX;
+    }
+
+    return true;
+}
+
+void PizzaParlour::display()
+{
+    if (front == -1)
+    {
+        cout << "\nCafe is Empty. No orders.\n";
+        return;
+    }
+    else
+    {
+        cout << "Order IDs: \n";
+        int i = front;
+        while (true)
+        {
+            cout << orders[i] << "  ";
+            if (i == rear)
+                break;
+            i = (i + 1) % MAX;
+        }
+        cout << endl;
+    }
+}
+
+int main()
+{
+    int ch, id = 0;
+    PizzaParlour q;
+
+    do
+    {
+        cout << "\nMenu\n";
+        cout << "1. Accept order\n";
+        cout << "2. Serve order\n";
+        cout << "3. Display orders\n";
+        cout << "4. Cancel order\n";
+        cout << "5. Exit\n";
+
+        cout << "Choice: ";
+        cin >> ch;
+
+        switch (ch)
+        {
+            case 1:
+                id++;
+                if (q.addOrder(id))
+                {
+                    cout << "Thank you for your order. Order ID is: " << id << endl;
+                }
+                else
+                {
+                    id--;
+                }
+                break;
+
+            case 2:
+                q.serveOrder();
+                break;
+
+            case 3:
+                q.display();
+                break;
+
+            case 4:
+                int cancelId;
+                cout << "Enter Order ID to cancel: ";
+                cin >> cancelId;
+                q.cancelOrder(cancelId);
+                break;
+
+            case 5:
+                cout << "\nThank you for visiting Vaibhav Cafe!\n";
+                break;
+
+            default:
+                cout << "\nInvalid choice!\n";
+                break;
+        }
+    } while (ch != 5);
+
+    return 0;
+}

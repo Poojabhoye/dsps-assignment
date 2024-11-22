@@ -1,0 +1,125 @@
+#include <iostream>
+using namespace std;
+
+class Deque {
+    int front, rear, size;
+    int *deque;
+
+public:
+    Deque(int n) {
+        size = n;
+        deque = new int[size];
+        front = -1;
+        rear = -1;
+    }
+
+    // Check if deque is full
+    bool isFull() {
+        return ((front == 0 && rear == size - 1) || (front == rear + 1));
+    }
+
+    // Check if deque is empty
+    bool isEmpty() {
+        return (front == -1);
+    }
+
+    // Insert an element at the front
+    void insertFront(int value) {
+        if (isFull()) {
+            cout << "Deque is full, cannot insert front.\n";
+            return;
+        }
+        if (front == -1) { // Empty deque
+            front = rear = 0;
+        } else if (front == 0) {
+            front = size - 1;
+        } else {
+            front = front - 1;
+        }
+        deque[front] = value;
+        cout << value << " inserted at front.\n";
+    }
+
+    // Insert an element at the rear
+    void insertRear(int value) {
+        if (isFull()) {
+            cout << "Deque is full, cannot insert rear.\n";
+            return;
+        }
+        if (rear == -1) { // Empty deque
+            front = rear = 0;
+        } else if (rear == size - 1) {
+            rear = 0;
+        } else {
+            rear = rear + 1;
+        }
+        deque[rear] = value;
+        cout << value << " inserted at rear.\n";
+    }
+
+    // Delete an element from the front
+    void deleteFront() {
+        if (isEmpty()) {
+            cout << "Deque is empty, cannot delete front.\n";
+            return;
+        }
+        cout << deque[front] << " deleted from front.\n";
+        if (front == rear) { // Deque has only one element
+            front = rear = -1;
+        } else if (front == size - 1) {
+            front = 0;
+        } else {
+            front = front + 1;
+        }
+    }
+
+    // Delete an element from the rear
+    void deleteRear() {
+        if (isEmpty()) {
+            cout << "Deque is empty, cannot delete rear.\n";
+            return;
+        }
+        cout << deque[rear] << " deleted from rear.\n";
+        if (front == rear) { // Deque has only one element
+            front = rear = -1;
+        } else if (rear == 0) {
+            rear = size - 1;
+        } else {
+            rear = rear - 1;
+        }
+    }
+
+    // Display the deque
+    void display() {
+        if (isEmpty()) {
+            cout << "Deque is empty.\n";
+            return;
+        }
+        cout << "Deque elements are: ";
+        int i = front;
+        while (i != rear) {
+            cout << deque[i] << " ";
+            i = (i + 1) % size;
+        }
+        cout << deque[rear] << "\n";
+    }
+};
+
+int main() {
+    Deque dq(5);
+
+    dq.insertRear(10);
+    dq.insertRear(20);
+    dq.insertFront(30);
+    dq.insertFront(40);
+    dq.display();
+
+    dq.deleteFront();
+    dq.deleteRear();
+    dq.display();
+
+    dq.insertRear(50);
+    dq.display();
+
+    return 0;
+}
